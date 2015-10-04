@@ -39,7 +39,24 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         
     }
-    
+// Enumeration check isn't working because if a title doesn't match any other title before it finds a match, all previous non-matches will allow a book to be created.
+    func duplicateBookCheck (bookTitle: String?) {
+        for (_, value) in userLibrary.books.enumerate() {
+            let titleToCheck = bookTitle
+            if titleToCheck == value.title {
+                titleField.text = ""
+                titleField.placeholder = "Title already exists"
+                print("The duplicate book check succeeded. Book is a duplicate.")
+            } else {
+                newBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
+                userLibrary.books.append(newBook)
+                clearTextFields()
+                print(userLibrary.books.count)
+                print("The duplicate book check succeeded.  Book is a new book.")
+            }
+        }
+    }
+
     func deleteBook() {
         for (index, value) in userLibrary.books.enumerate() {
             print(index, value)
@@ -59,7 +76,6 @@ class ViewController: UIViewController {
         titleField.placeholder = ""
     }
     
-//HOUSTON, WE HAVE A PROBLEM.  Something is wrong in the commented out code.  Causes bad data entry on 3rd entry.
     @IBAction func addBookButton(sender: UIButton) {
         if titleField.text == "" {
             titleField.placeholder = "You must enter a book title."
@@ -73,20 +89,7 @@ class ViewController: UIViewController {
                 clearTextFields()
                 print(userLibrary.books.count)
             default:
-                for (_, value) in userLibrary.books.enumerate() {
-                if titleField.text == value.title {
-                    print(index, value)
-                    titleField.text = ""
-                    titleField.placeholder = "Title already exists."
-                    print("The duplicate book check succeeded. Book is a duplicate.")
-                    } else {
-                    newBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
-                    userLibrary.books.append(newBook)
-                    clearTextFields()
-                    print(userLibrary.books.count)
-                    print("The duplicate book check succeeded.  Book is a new book.")
-                    }
-                }
+                duplicateBookCheck(titleField.text)
             }
         }
     }
