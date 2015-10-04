@@ -39,20 +39,21 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         
     }
-// Enumeration check isn't working because if a title doesn't match any other title before it finds a match, all previous non-matches will allow a book to be created.
+// This function still doesn't work and I can not figure out why.
     func duplicateBookCheck (bookTitle: String?) {
-        for (_, value) in userLibrary.books.enumerate() {
-            let titleToCheck = bookTitle
-            if titleToCheck == value.title {
-                titleField.text = ""
-                titleField.placeholder = "Title already exists"
-                print("The duplicate book check succeeded. Book is a duplicate.")
+        for (index, value) in userLibrary.books.enumerate() {
+            if bookTitle != value.title {
+                continue
             } else {
-                newBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
-                userLibrary.books.append(newBook)
-                clearTextFields()
-                print(userLibrary.books.count)
-                print("The duplicate book check succeeded.  Book is a new book.")
+                if index != userLibrary.books.count-1 {
+                    titleField.text = ""
+                    titleField.placeholder = "Title already exists"
+                    userLibrary.books.removeLast()
+                    print(userLibrary.books.count)
+                } else {
+                    titleField.text = ""
+                    
+                }
             }
         }
     }
@@ -80,19 +81,21 @@ class ViewController: UIViewController {
         if titleField.text == "" {
             titleField.placeholder = "You must enter a book title."
         } else {
-            
-            let bookCount = userLibrary.books.count
-            switch bookCount {
+            switch userLibrary.books.count {
              case 0:
                 newBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
                 userLibrary.books.append(newBook)
                 clearTextFields()
                 print(userLibrary.books.count)
             default:
+                newBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
+                userLibrary.books.append(newBook)
+                print(userLibrary.books.count)
                 duplicateBookCheck(titleField.text)
             }
         }
     }
+    
     @IBAction func deleteBookButton(sender: UIButton) {
         deleteBook()
     }
