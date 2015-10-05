@@ -70,6 +70,9 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pij-v5-j8A">
                                 <rect key="frame" x="20" y="302" width="78" height="30"/>
                                 <state key="normal" title="Edit a Book"/>
+                                <connections>
+                                    <action selector="editBookButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rTx-j2-4vk"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vbf-VC-j22">
                                 <rect key="frame" x="144" y="269" width="156" height="30"/>

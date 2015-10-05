@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     
     var userLibrary = Library()
     var newBook = Book()
+    var editBook = Book()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +79,24 @@ class ViewController: UIViewController {
         viewLibrary()
     }
     
+    func editBookInLibrary(bookToEdit: String?) {
+        if titleField.text == "" {
+            titleField.placeholder = "You must enter a book title."
+        } else {
+        editBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
+            for (index, value) in userLibrary.books.enumerate() {
+                if bookToEdit != value.title {
+                    continue
+                } else {
+                    userLibrary.books.insert(editBook, atIndex: index)
+                    userLibrary.books.removeAtIndex(index+1)
+                    viewLibrary()
+                    clearTextFields()
+                }
+            }
+        }
+    }
+    
     func clearTextFields() {
         titleField.text = ""
         authorField.text = ""
@@ -99,6 +118,9 @@ class ViewController: UIViewController {
                 appendUserLibrary()
             }
         }
+    }
+    @IBAction func editBookButton(sender: UIButton) {
+        editBookInLibrary(titleField.text)
     }
     
     @IBAction func deleteBookButton(sender: UIButton) {
