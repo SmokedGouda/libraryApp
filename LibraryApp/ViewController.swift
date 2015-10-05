@@ -24,8 +24,6 @@ class ViewController: UIViewController {
     var userLibrary = Library()
     var newBook = Book()
     
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
         clearTextFields()
@@ -37,36 +35,47 @@ class ViewController: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
-// This function still doesn't work and I can not figure out why.
-    func duplicateBookCheck (bookTitle: String?) {
-        for (index, value) in userLibrary.books.enumerate() {
-            if bookTitle != value.title {
+
+    func addBook() {
+        newBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
+        userLibrary.books.append(newBook)
+        clearTextFields()
+        viewLibrary()
+    }
+
+// Perfoms a check for duplicate book titles.  Will return a 0 for no and 1 for yes.
+    func duplicateCheck(bookToAdd: String?) -> Int {
+        var duplicateCount = 0
+        for (_, value) in userLibrary.books.enumerate() {
+            if bookToAdd != value.title {
                 continue
             } else {
-                if index != userLibrary.books.count-1 {
-                    titleField.text = ""
-                    titleField.placeholder = "Title already exists"
-                    userLibrary.books.removeLast()
-                    print(userLibrary.books.count)
-                } else {
-                    titleField.text = ""
-                    
-                }
+                duplicateCount++
             }
+        }
+        return duplicateCount
+    }
+
+// Uses the return from the duplicateCheck function above to either allow a new book to be added or denied.
+    func appendUserLibrary() {
+        let duplicateTitleCount = duplicateCheck(titleField.text!)
+        if duplicateTitleCount == 0 {
+            addBook()
+        } else {
+            titleField.text = ""
+            titleField.placeholder = "Title already exists."
         }
     }
 
     func deleteBook() {
         for (index, value) in userLibrary.books.enumerate() {
-            print(index, value)
             if titleField.text == value.title! {
                 userLibrary.books.removeAtIndex(index)
-                print(index, value)
             }
         }
         clearTextFields()
+        viewLibrary()
     }
     
     func clearTextFields() {
@@ -83,15 +92,11 @@ class ViewController: UIViewController {
         } else {
             switch userLibrary.books.count {
              case 0:
-                newBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
-                userLibrary.books.append(newBook)
-                clearTextFields()
-                print(userLibrary.books.count)
+                addBook()
+                
             default:
-                newBook = Book(title: titleField.text, author: authorField.text, genre: genreField.text, length: Int(numberOfPagesField.text!))
-                userLibrary.books.append(newBook)
-                print(userLibrary.books.count)
-                duplicateBookCheck(titleField.text)
+                duplicateCheck(titleField.text!)
+                appendUserLibrary()
             }
         }
     }
@@ -100,7 +105,7 @@ class ViewController: UIViewController {
         deleteBook()
     }
 
-    @IBAction func viewLibrary(sender: UIButton) {
+    func viewLibrary() {
         if userLibrary.books.count >= 4 {
             bookFourLabel.text = String(userLibrary.books[3])
             bookThreeLabel.text = String(userLibrary.books[2])
